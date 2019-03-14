@@ -6,8 +6,15 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include "mmio.h"
+#include "print.h"
 
-double wtime();
+
+double* convertToNonCompressedMatrix(int M, int N, int nz, int *I, int *J, double* val, double* result);
+double* convertToELLPACK(int M, int N, int nz, int *I, int *J, double* val, double* result);
+double* convertToCSR(int M, int N, int nz, int *I, int *J, double* val, double* result);
+
+// Read a matrix from the input
+void readMatrix(char* fileName);
 
 
 #endif
