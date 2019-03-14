@@ -34,7 +34,7 @@ void generateMatrix(int rows, int cols, double* matrix) {
 
 
 // Simple CPU implementation of matrix-vector product
-double* MatrixVector(int rows, int cols, const double* A, const double* x, double* y) 
+void MatrixVector(int rows, int cols, const double* A, const double* x, double* y) 
 {
   int row,col, idx;
   double t;
@@ -46,8 +46,33 @@ double* MatrixVector(int rows, int cols, const double* A, const double* x, doubl
     }
     y[row] = t;
   }
+}
 
-  return y;
+void MatrixVectorCSR(int M, int N, double* IRP, double* JA, double* AS, double* x, double* y)
+{
+	/*
+	for i=1:m
+	t=0;
+	for j=irp(i):irp(i+1)-1
+	t = t + as(j)*x(ja(j));
+	2
+	end
+	y(i) = t;
+	end
+	*/
+}
+
+void MatrixVectorELLPACK(int M, int N, int MAXNZ, double* JA, double* AS, double* x, double* y)
+{
+	/*
+	for i=1:m
+	t=0;
+	for j=1:maxnzr
+	t = t + as(i,j)*x(ja(i,j));
+	end
+	y(i) = t;
+	end
+	*/
 }
 
 int main(int argc, char** argv) 

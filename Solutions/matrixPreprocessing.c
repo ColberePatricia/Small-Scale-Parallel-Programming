@@ -1,9 +1,9 @@
 #include "matrixPreprocessing.h"
 
 
-double* convertToNonCompressedMatrix(int M, int N, int nz, int *I, int *J, double* val, double* result) {
+double* convertToNonCompressedMatrix(int M, int N, int nz, int *I, int *J, double* val) {
 	// We reserve memory for the result matrix
-	result = (double *)malloc(M * N * sizeof(double));
+	double* result = (double *)malloc(M * N * sizeof(double));
 	// We initialize the matrix with zeroes
 	for (int i = 0;i < M*N;i++)
 		result[i] = 0;
@@ -19,12 +19,40 @@ double* convertToNonCompressedMatrix(int M, int N, int nz, int *I, int *J, doubl
 	return result;
 }
 
-double* convertToELLPACK(int M, int N, int nz, int *I, int *J, double* val, double* result) {
+// Returns the IRP of the CSR
+double* getCSR_IRP(int M, int N, int nz, int *I, int *J, double* val) {
 
 }
 
-double* convertToCSR(int M, int N, int nz, int *I, int *J, double* val, double* result) {
+// Returns the JA of the CSR
+int* getCSR_JA(int M, int N, int nz, int *I, int *J, double* val) {
+	int* JA = (int *)malloc(nz * sizeof(int));
 
+	return JA;
+}
+
+// Returns the AS of the CSR
+double* getCSR_AS(int M, int N, int nz, int *I, int *J, double* val) {
+	return val;
+}
+
+// Returns the MAXNZ of the ELLPACK
+int getELLPACK_MAXNZ(int M, int N, int nz, int *I, int *J, double* val) {
+	int MAXNZ = 0;
+
+	return MAXNZ;
+}
+
+// Returns the JA of the ELLPACK
+int* getELLPACK_JA(int M, int N, int nz, int *I, int *J, double* val, int MAXNZ) {
+	int* JA = (int *)malloc(nz * sizeof(int));
+
+	return JA;
+}
+
+// Returns the AS of the ELLPACK
+double* getELLPACK_AS(int M, int N, int nz, int *I, int *J, double* val, int MAXNZ) {
+	return val;
 }
 
 // Read a matrix from the input
@@ -76,7 +104,7 @@ void readMatrix(char* fileName) {
 		
 		// TO DO REMOVE!!!
 		double* result = (double *)malloc(M * N * sizeof(double));
-		result = convertToNonCompressedMatrix(M, N, nz, I, J, val, result);
+		result = convertToNonCompressedMatrix(M, N, nz, I, J, val);
 		fprintf(stdout, "RESULT:\n\n");
 		printMatrix(M, N, result);
 
