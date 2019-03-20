@@ -1,5 +1,24 @@
 #include "matrixPreprocessing.h"
 
+double* bubbleSort(int size, double* matrix) {
+	int i, j;
+	for (i = 0; i < size - 1; ++i) {
+		for (j = 0; j < size - 1 - i; ++j) {
+			if (matrix[j] > matrix[j + 1])
+				matrix[j + 1], matrix[j] = matrix[j], matrix[j + 1];
+		}
+	}
+}
+
+int maximumMatrix(int size, double* matrix) {
+	int maximum = matrix[0];
+
+	for (int i = 1; i < size; i++) {
+		if (matrix[i] > maximum)
+			maximum = matrix[i];
+	}
+	return maximum;
+}
 
 double* convertToNonCompressedMatrix(int M, int N, int nz, int *I, int *J, double* val) {
 	// We reserve memory for the result matrix
@@ -21,14 +40,55 @@ double* convertToNonCompressedMatrix(int M, int N, int nz, int *I, int *J, doubl
 
 // Returns the IRP of the CSR
 double* getCSR_IRP(int M, int N, int nz, int *I, int *J, double* val) {
+	int* IRP = (int *)malloc((M+1) * sizeof(int));
+	int k = 1; // k will be the current index+1 of the IRP array
+	int i; // i will be the current index+1 of the I array
+	int irp = 1; // irp will correspond to the value of IRP
 
+	// We put the first values to zero if the first rows are empty
+	while (I[0] != k) {
+		IRP[k - 1] = 0;
+		k++;
+	}
+
+	// Now I[0] == k
+	IRP[k - 1] = irp; // The first value is always one
+	k++;
+	irp++;
+
+	// We go through the I array
+	for (i = 2;i <= nz;i++) {
+		// If we are on a new row, we can put a new value in IRP
+		if (I[i - 1] == I[i - 2] + 1) {
+			IRP[k - 1] = irp;
+			k++;
+			irp++;
+		} // We have skipped at least a row
+		else if (I[i - 1] > I[i - 2] + 1) {
+			// We need to input the previous value again as many times as there are skipped rows
+			for (int skipped = 1;skipped <= I[i - 1] - I[i - 2] - 1; skipped++) {
+				IRP[k - 1] = IRP[k - 2];
+				k++;
+			}
+			// We also need to input the value corresponding to the new row
+			IRP[k - 1] = irp;
+			irp++;
+		}
+		else {
+			// The value increases because we have stayed on the same row but are moving in the index of non zero values
+			irp++;
+		}
+	}
+
+	// The last value is the number of non zero values plus one
+	IRP[M] = nz + 1;
+
+	return IRP;
 }
 
 // Returns the JA of the CSR
 int* getCSR_JA(int M, int N, int nz, int *I, int *J, double* val) {
-	int* JA = (int *)malloc(nz * sizeof(int));
-
-	return JA;
+	return J;
 }
 
 // Returns the AS of the CSR
@@ -38,21 +98,58 @@ double* getCSR_AS(int M, int N, int nz, int *I, int *J, double* val) {
 
 // Returns the MAXNZ of the ELLPACK
 int getELLPACK_MAXNZ(int M, int N, int nz, int *I, int *J, double* val) {
-	int MAXNZ = 0;
+	// We create an array that will contain the number of non zero for each row
+	// from this array we will get the max, that is MAXNZ
+	int* temp = (int *)malloc(nz * sizeof(int));
+	// We initialise its values to zero
 
-	return MAXNZ;
+	for (int i = 0;i < nz;i++)
+		temp[I[i]]++;
+
+	return maximumMatrix(nz, temp);
 }
 
 // Returns the JA of the ELLPACK
 int* getELLPACK_JA(int M, int N, int nz, int *I, int *J, double* val, int MAXNZ) {
-	int* JA = (int *)malloc(nz * sizeof(int));
+	int* JA = (int *)malloc(M * MAXNZ * sizeof(int));
+	int k, p, q;
+	k = 1;
+	int idx;
 
+	for (p = 1;p <= M;p++) {
+		for (q = 1;q <= MAXNZ;q++) {
+			idx = (p - 1)*MAXNZ + (q - 1);
+			fprintf(stdout, "p-1=%d, q-1=%d, idx=%d\n", p - 1, q - 1, idx);
+			if (I[k - 1] == p) {
+				JA[idx] = J[k - 1];
+				k++;
+			}
+			else
+				JA[idx] = J[k - 2];
+		}
+	}
 	return JA;
 }
 
 // Returns the AS of the ELLPACK
 double* getELLPACK_AS(int M, int N, int nz, int *I, int *J, double* val, int MAXNZ) {
-	return val;
+	double* AS = (double *)malloc(M * MAXNZ * sizeof(double));
+	int k, p, q;
+	k = 1;
+	int idx;
+
+	for (p = 1;p <= M;p++) {
+		for (q = 1;q <= MAXNZ;q++) {
+			idx = (p - 1)*MAXNZ + (q - 1);
+			fprintf(stdout, "p-1=%d, q-1=%d, idx=%d\n", p - 1, q - 1, idx);
+			if (I[k - 1] == p) {
+				AS[idx] = val[k - 1];
+				k++;
+			} else
+				AS[idx] = 0;
+		}
+	}
+	return AS;
 }
 
 // Read a matrix from the input
