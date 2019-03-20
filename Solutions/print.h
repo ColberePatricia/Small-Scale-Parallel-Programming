@@ -8,7 +8,8 @@
 
 // Print the matrix in the console
 void printMatrix(int rows, int cols, const double* A);
-
+// Print the int matrix in the console
+void printMatrixInt(int rows, int cols, const int* A);
 // Print the vector in the console
 void printVector(int size, const double* vector);
 

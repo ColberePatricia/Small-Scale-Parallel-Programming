@@ -78,6 +78,8 @@ void MatrixVectorELLPACK(int M, int N, int MAXNZ, double* JA, double* AS, double
 int main(int argc, char** argv) 
 {
   
+	testMatrixProcessing();
+
 	char* matrixFile;
 	if (argc < 2)
 	{
@@ -108,12 +110,14 @@ int main(int argc, char** argv)
   generateVector(nrows, x);
   generateMatrix(nrows, ncols, A);
 
+  /*
   // We check the matrix and the vector
   fprintf(stdout, "Matrix:\n");
   printMatrix(nrows, ncols, A);
   fprintf(stdout, "Vector:\n");
   printVector(nrows, x);
-  
+  */
+
   double t1 = wtime();
   MatrixVector(nrows, ncols, A, x, y);
   double t2 = wtime();
