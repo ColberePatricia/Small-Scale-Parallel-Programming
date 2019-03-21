@@ -7,8 +7,10 @@
 #include <stdio.h>
 #include <assert.h>
 #include "matrixPreprocessing.h"
+#include "matrixVector.h"
 
 
+// Do all the unit tests for matrix processing
 void testMatrixProcessing();
 
 // These are the unit tests for matrix processing
@@ -34,7 +36,18 @@ void testGetELLPACK_AS();
 
 void testReadMatrix();
 
-// These functions will be used to test matrix processing
+
+
+void testMatrixVectorProduct();
+
+// These are the unit tests for matrix processing
+void testMatrixVector();
+void testMatrixVectorCSR();
+void testMatrixVectorELLPACK();
+
+
+
+// These functions will be used to test matrix processing and the product y<-Ax
 /*
 Matrix created
 (11 12 0 0)

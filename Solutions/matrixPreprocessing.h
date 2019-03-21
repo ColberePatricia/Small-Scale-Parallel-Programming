@@ -25,9 +25,9 @@ double* convertToNonCompressedMatrix(int M, int N, int nz, int *I, int *J, doubl
 // Returns the IRP of the CSR
 int* getCSR_IRP(int M, int nz, int *I);
 // Returns the JA of the CSR
-int* getCSR_JA(int *J);
+int* getCSR_JA(int nz, int *I, int *J);
 // Returns the AS of the CSR
-double* getCSR_AS(double* val);
+double* getCSR_AS(int nz, int* I, double* val);
 
 // Returns the MAXNZ of the ELLPACK
 int getELLPACK_MAXNZ(int nz, int *I);

@@ -128,7 +128,7 @@ int* getCSR_IRP(int M, int nz, int *I) {
 	int* IRP = (int *)malloc((M+1) * sizeof(int));
 	int k = 1; // k will be the current index+1 of the IRP array
 	int i; // i will be the current index+1 of the I array
-	int irp = 1; // irp will correspond to the value of IRP
+	int irp = 0; // irp will correspond to the value of IRP
 
 	// We put the first values to zero if the first rows are empty
 	while (I[0]+1 != k) {
@@ -137,7 +137,7 @@ int* getCSR_IRP(int M, int nz, int *I) {
 	}
 
 	// Now I[0]+1 == k
-	IRP[k - 1] = irp; // The first value is always one
+	IRP[k - 1] = irp; // The first value is always zero in C
 	k++;
 	irp++;
 
@@ -152,7 +152,7 @@ int* getCSR_IRP(int M, int nz, int *I) {
 		else if (I[i - 1] > I[i - 2] + 1) {
 			// We need to input the previous value again as many times as there are skipped rows
 			for (int skipped = 1;skipped <= I[i - 1] - I[i - 2] - 1; skipped++) {
-				IRP[k - 1] = IRP[k - 2];
+				IRP[k - 1] = irp;
 				k++;
 			}
 			// We also need to input the value corresponding to the new row
@@ -166,19 +166,21 @@ int* getCSR_IRP(int M, int nz, int *I) {
 		}
 	}
 
-	// The last value is the number of non zero values plus one
-	IRP[M] = nz + 1;
+	// The last value is the number of non zero values in C
+	IRP[M] = nz;
 
 	return IRP;
 }
 
 // Returns the JA of the CSR
-int* getCSR_JA(int *J) {
+int* getCSR_JA(int nz, int *I, int *J) {
+	J = reorderJ(nz, I, J);
 	return J;
 }
 
 // Returns the AS of the CSR
-double* getCSR_AS(double* val) {
+double* getCSR_AS(int nz, int* I, double* val) {
+	val = reorderVal(nz, I, val);
 	return val;
 }
 
