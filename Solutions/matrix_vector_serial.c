@@ -40,7 +40,8 @@ int main(int argc, char** argv)
 	if (argc < 2)
 	{
 		fprintf(stderr, "Usage: %s [martix-market-filename]\nWe will be using the cage4 matrix as default\n", argv[0]);
-		fileName = "D:\\Cranfield work\\Small Scale Parallel Programming\\matrices\\cage4.mtx";
+		//fileName = "D:\\Cranfield work\\Small Scale Parallel Programming\\matrices\\cage4.mtx";
+		fileName = "../matrices/cage4.mtx";
 	}
 	else {
 		fileName = argv[1];
@@ -73,7 +74,7 @@ int main(int argc, char** argv)
 		/*   specifier as in "%lg", "%lf", "%le", otherwise errors will occur */
 		/*  (ANSI C X3.159-1989, Sec. 4.9.6.2, p. 136 lines 13-15)            */
 		for (i = 0; i < nz; i++) {
-			fscanf_s(f, "%d %d %lg\n", &I[i], &J[i], &val[i]);
+			fscanf(f, "%d %d %lg\n", &I[i], &J[i], &val[i]);
 			I[i]--;  // adjust from 1-based to 0-based
 			J[i]--;
 		}
@@ -106,27 +107,26 @@ int main(int argc, char** argv)
 		generateVector(N, x);
 
 		
-		// We do our products 10000 times to get a better approximation of the time and MFLOPS
 		// We do the product with CSR
 		double t1CSR = wtime();
-		for (int i=0;i<10000;i++)
-			MatrixVectorCSR(M, IRP, JA_CSR, AS_CSR, x, y);
+		//for (int i=0;i<10000;i++)
+		MatrixVectorCSR(M, IRP, JA_CSR, AS_CSR, x, y);
 		double t2CSR = wtime();
 		double tmltCSR = (t2CSR - t1CSR);
 		double mflopsCSR = (2.0e-6)*M*N / tmltCSR;
 		
 		// We do the product for ELLPACK
 		double t1ELLPACK = wtime();
-		for (int i = 0;i < 10000;i++)
-			MatrixVectorELLPACK(M, N, MAXNZ, JA_ELLPACK, AS_ELLPACK, x, y);
+		//for (int i = 0;i < 10000;i++)
+		MatrixVectorELLPACK(M, N, MAXNZ, JA_ELLPACK, AS_ELLPACK, x, y);
 		double t2ELLPACK = wtime();
 		double tmltELLPACK = (t2ELLPACK - t1ELLPACK);
 		double mflopsELLPACK = (2.0e-6)*M*N / tmltELLPACK;
 
 		
 		// We print our results
-		fprintf(stdout, "CSR: Matrix-Vector product of size %d x %d with 1 thread: time %lf  MFLOPS %lf \n", M, N, tmltCSR/10000, mflopsCSR*10000);
-		fprintf(stdout, "ELLPACK: Matrix-Vector product of size %d x %d with 1 thread: time %lf  MFLOPS %lf \n", M, N, tmltELLPACK/10000, mflopsELLPACK*10000);
+		fprintf(stdout, "CSR: Matrix-Vector product of size %d x %d with 1 thread: time %lf  MFLOPS %lf \n", M, N, tmltCSR, mflopsCSR);
+		fprintf(stdout, "ELLPACK: Matrix-Vector product of size %d x %d with 1 thread: time %lf  MFLOPS %lf \n", M, N, tmltELLPACK, mflopsELLPACK);
 
 		// We free the matrices and vectors
 		free(IRP);

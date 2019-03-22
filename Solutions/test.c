@@ -325,13 +325,11 @@ void testGetELLPACK_AS() {
 	int M = 4;
 	int MAXNZ = 2;
 	int* I = (int *)malloc(nz * sizeof(int));
-	int* J = (int *)malloc(nz * sizeof(int));
 	double* val = (double *)malloc(nz * sizeof(double));
 	double* AS = (double *)malloc(M * MAXNZ * sizeof(double));
 	double* resultShouldBe = (double *)malloc(M * MAXNZ * sizeof(double));
 
 	I = createTestI();
-	J = createTestJ();
 	val = createTestVal();
 
 	AS = getELLPACK_AS(M, nz, I, val, MAXNZ);
@@ -350,7 +348,8 @@ void testGetELLPACK_AS() {
 }
 
 void testReadMatrix() {
-	char* matrixFile = "D:\\Cranfield work\\Small Scale Parallel Programming\\matrices\\cage4.mtx";
+	//char* matrixFile = "D:\\Cranfield work\\Small Scale Parallel Programming\\matrices\\cage4.mtx";
+	char* matrixFile = "../matrices/cage4.mtx";
 	readMatrix(matrixFile);
 }
 
