@@ -1,0 +1,103 @@
+#!/bin/bash
+##
+## MPI submission script for PBS on CRESCENT
+## -----------------------------------------
+##
+## Follow the 6 steps below to configure your job
+##
+## STEP 1:
+##
+## Enter a job name after the -N on the line below:
+##
+#PBS -N serialOutput
+##
+## STEP 2:
+##
+## Select the number of cpus/cores required by modifying the #PBS -l select line below
+##
+## Normally you select cpus in chunks of 16 cpus
+## The Maximum value for ncpus is 16 and mpiprocs MUST be the same value as ncpus.
+##
+## If more than 16 cpus are required then select multiple chunks of 16
+## e.g.	16 CPUs: select=1:ncpus=16:mpiprocs=16
+##	32 CPUs: select=2:ncpus=16:mpiprocs=16
+##	48 CPUs: select=3:ncpus=16:mpiprocs=16
+##	..etc..
+##
+#PBS -l select=1:ncpus=1:mpiprocs=1
+##
+## STEP 3:
+##
+## Select the correct queue by modifying the #PBS -q line below
+##
+## half_hour	-  30 minutes
+## one_hour	-   1 hour
+## half_day	-  12 hours
+## one_day	-  24 hours
+## two_day	-  48 hours
+## five_day	- 120 hours
+## ten_day	- 240 hours (by special arrangement)
+##
+#PBS -q half_day
+##
+## STEP 4:
+##
+## Replace the hpc@cranfield.ac.uk email address
+## with your Cranfield email address on the #PBS -M line below:
+## Your email address is NOT your username
+##
+#PBS -M patricia-marine-jade.m.colbere@cranfield.ac.uk
+##
+## ====================================
+## DO NOT CHANGE THE LINES BETWEEN HERE
+## ====================================
+#PBS -j oe
+#PBS -W sandbox=PRIVATE
+#PBS -k n
+ln -s $PWD $PBS_O_WORKDIR/$PBS_JOBID
+## Change to working directory
+cd $PBS_O_WORKDIR
+## Calculate number of CPUs
+export cpus=`cat $PBS_NODEFILE | wc -l`
+## ========
+## AND HERE
+## ========
+##
+## STEP 5:
+##
+
+## Put correct parameters in mpirun execution line
+## below:
+##
+./outputSERIAL ../matrices/cage4.mtx
+./outputSERIAL ../matrices/mhda416.mtx
+./outputSERIAL ../matrices/mcfe.mtx
+./outputSERIAL ../matrices/olm1000.mtx
+./outputSERIAL ../matrices/adder_dcop_32.mtx
+./outputSERIAL ../matrices/west2021.mtx
+./outputSERIAL ../matrices/cavity10.mtx
+./outputSERIAL ../matrices/rdist2.mtx
+./outputSERIAL ../matrices/cant.mtx
+./outputSERIAL ../matrices/olafu.mtx
+./outputSERIAL ../matrices/Cube_Coup_dt0.mtx
+./outputSERIAL ../matrices/ML_Laplace.mtx
+./outputSERIAL ../matrices/bcsstk17.mtx
+./outputSERIAL ../matrices/mac_econ_fwd500.mtx
+./outputSERIAL ../matrices/mhd4800a.mtx
+./outputSERIAL ../matrices/cop20k_A.mtx
+./outputSERIAL ../matrices/raefsky2.mtx
+./outputSERIAL ../matrices/af23560.mtx
+./outputSERIAL ../matrices/lung2.mtx
+./outputSERIAL ../matrices/PR02R.mtx
+./outputSERIAL ../matrices/FEM_3D_thermal1.mtx
+./outputSERIAL ../matrices/thermal1.mtx
+./outputSERIAL ../matrices/thermal2.mtx
+./outputSERIAL ../matrices/thermomech_TK.mtx
+./outputSERIAL ../matrices/nlpkkt80.mtx
+./outputSERIAL ../matrices/webbase-1M.mtx
+./outputSERIAL ../matrices/dc1.mtx
+./outputSERIAL ../matrices/amazon0302.mtx
+./outputSERIAL ../matrices/af_1_k101.mtx
+./outputSERIAL ../matrices/roadNet-PA.mtx
+
+/bin/rm -f $PBS_JOBID

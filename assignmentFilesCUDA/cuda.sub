@@ -1,0 +1,95 @@
+#!/bin/bash
+##
+## GPU submission script for PBS on CRESCENT
+## -----------------------------------------
+##
+## Follow the 5 steps below to configure. If you edit this from Windows,
+## *before* submitting via "qsub" run "dos2unix" on this file - or you will
+## get strange errors. You have been warned.
+##
+## STEP 1:
+## The following line contains the job name:
+##
+#PBS -N cudaOutput
+##
+## STEP 2:
+##
+##
+#PBS -l select=1:ncpus=1:mpiprocs=1:ngpus=1
+##
+## STEP 3:
+##
+## Select correct queue:
+##
+## for this class we have a special queue
+##
+#PBS -q gpu
+##PBS -l walltime=1:00:00
+##
+## STEP 4:
+##
+## Put YOUR email address in the next line:
+##
+#PBS -M patricia-marine-jade.m.colbere@cranfield.ac.uk
+##
+##
+##
+## DO NOT CHANGE the following lines
+##------------------------------------------------
+#PBS -j oe
+#PBS -v "CUDA_VISIBLE_DEVICES="
+#PBS -W sandbox=PRIVATE
+#PBS -V
+#PBS -m abe
+#PBS -k n
+##
+## Change to working directory
+ln -s $PWD $PBS_O_WORKDIR/$PBS_JOBID
+cd $PBS_O_WORKDIR
+## Allocated gpu(s)
+echo CUDA_VISIBLE_DEVICES=$CUDA_VISIBLE_DEVICES
+##
+## Calculate number of CPUs
+cpus=`cat $PBS_NODEFILE | wc -l`
+gpus=`echo $CUDA_VISIBLE_DEVICES|awk -F"," '{print NF}'`
+##
+##
+##-------------------------------------------------
+##
+## STEP 5:
+##
+## Put correct parameters in mpirun execution line
+## below:
+##
+./outputCUDA ../matrices/cage4.mtx
+./outputCUDA ../matrices/mhda416.mtx
+./outputCUDA ../matrices/mcfe.mtx
+./outputCUDA ../matrices/olm1000.mtx
+./outputCUDA ../matrices/adder_dcop_32.mtx
+./outputCUDA ../matrices/west2021.mtx
+./outputCUDA ../matrices/cavity10.mtx
+./outputCUDA ../matrices/rdist2.mtx
+./outputCUDA ../matrices/cant.mtx
+./outputCUDA ../matrices/olafu.mtx
+./outputCUDA ../matrices/Cube_Coup_dt0.mtx
+./outputCUDA ../matrices/ML_Laplace.mtx
+./outputCUDA ../matrices/bcsstk17.mtx
+./outputCUDA ../matrices/mac_econ_fwd500.mtx
+./outputCUDA ../matrices/mhd4800a.mtx
+./outputCUDA ../matrices/cop20k_A.mtx
+./outputCUDA ../matrices/raefsky2.mtx
+./outputCUDA ../matrices/af23560.mtx
+./outputCUDA ../matrices/lung2.mtx
+./outputCUDA ../matrices/PR02R.mtx
+./outputCUDA ../matrices/FEM_3D_thermal1.mtx
+./outputCUDA ../matrices/thermal1.mtx
+./outputCUDA ../matrices/thermal2.mtx
+./outputCUDA ../matrices/thermomech_TK.mtx
+./outputCUDA ../matrices/nlpkkt80.mtx
+./outputCUDA ../matrices/webbase-1M.mtx
+./outputCUDA ../matrices/dc1.mtx
+./outputCUDA ../matrices/amazon0302.mtx
+./outputCUDA ../matrices/af_1_k101.mtx
+./outputCUDA ../matrices/roadNet-PA.mtx
+
+/bin/rm -f $PBS_JOBID
